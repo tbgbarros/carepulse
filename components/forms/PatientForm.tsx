@@ -6,8 +6,9 @@ import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import CustomFormField from "../ui/CustomFormField";
-import SubmitButton from "../ui/SubmitButton"
+import SubmitButton from "../SubmitButton"
 import { useState } from "react"
+import { UserFormValidation } from "@/lib/validation"
 
 export enum FormFieldType {
     INPUT = 'input',
@@ -19,25 +20,22 @@ export enum FormFieldType {
     SKELETON = 'skeleton'
 }
 
-const formSchema = z.object({
-    username: z.string().min(4, {
-        message: "Usuario deve conter oa menos quatro caracteres.",
-    }),
-})
 
 const PatientForm = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     // 1. Define your form.
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof UserFormValidation>>({
+        resolver: zodResolver(UserFormValidation),
         defaultValues: {
             username: "",
+            email: "",
+            phone: "",
         },
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit(values: z.infer<typeof UserFormValidation>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         console.log(values)
